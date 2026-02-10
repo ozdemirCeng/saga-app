@@ -1,0 +1,45 @@
+# .NET & Visual Studio
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+.vscode/
+*.log
+
+# Environment
+.env
+*.env
+render.env
+appsettings.Development.json
+appsettings.Local.json
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+.eslintcache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Capacitor
+.capacitor
+capacitor.config.local.ts
+
+# Build
+bower_components
+
+# Misc
+.env.local
+.env.*.local
