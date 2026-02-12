@@ -1,4 +1,4 @@
-# 📚 SAGA - Social Activity & Gaming Aggregator
+# 📚 SAGA - Social Activity & Entertainment Aggregator
 
 > A modern, full-stack platform for discovering, sharing, and engaging with books, movies, games, and creative content. Built with React, ASP.NET Core, and PostgreSQL.
 

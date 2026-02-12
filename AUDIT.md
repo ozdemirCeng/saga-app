@@ -1,9 +1,9 @@
 # 🔒 Security Audit & Code Review Report
 
-**Project:** SAGA - Social Activity & Gaming Aggregator  
+**Project:** SAGA - Social Activity & Entertainment Aggregator  
 **Date:** February 10, 2025  
 **Version:** 1.0.0  
-**Status:** ✅ Ready for Open Source Release  
+**Status:** ✅ Ready for Open Source Release
 
 ---
 
@@ -28,23 +28,27 @@ SAGA has been thoroughly audited for security vulnerabilities, code quality, and
 **Status:** SECURE
 
 **Implementation:**
+
 - Google OAuth 2.0 via Neon Auth (Better Auth)
 - No user passwords stored in database
 - Automatic token refresh mechanism
 - 24-hour JWT token expiration
 
 **Code Location:**
+
 - Frontend: `saga-frontend/src/services/neonAuth.ts`
 - Frontend: `saga-frontend/src/context/AuthContext.tsx`
 - Backend: `saga-backend/Program.cs` (JWT configuration)
 
 **Findings:**
+
 - ✅ No plaintext credentials transmitted
 - ✅ HTTPS required for all auth flows
 - ✅ Callback URLs restricted to Neon Auth domain
 - ✅ Token validation on protected endpoints
 
 **Recommendations:**
+
 1. ✅ IMPLEMENTED: 8-second timeout on auth init to prevent black screens
 2. ✅ IMPLEMENTED: Error logging for failed password resets
 3. ⚠️ CONSIDER: Implement token rotation (refresh token pattern)
@@ -55,6 +59,7 @@ SAGA has been thoroughly audited for security vulnerabilities, code quality, and
 **Status:** SECURE
 
 **Details:**
+
 ```
 Token Type:        Bearer JWT
 Issuer:           SagaPlatform
@@ -65,6 +70,7 @@ Secret Length:    Minimum 32 characters (production)
 ```
 
 **Code:**
+
 ```csharp
 // saga-backend/Program.cs
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Secret"]);
@@ -87,6 +93,7 @@ builder.Services
 ```
 
 **Findings:**
+
 - ✅ Token validation is strict (all checks enabled)
 - ✅ Clock skew set to zero (no leeway)
 - ✅ Secret from environment variable only
@@ -99,6 +106,7 @@ builder.Services
 **Status:** IMPLEMENTED
 
 **User Roles:**
+
 - `SuperAdmin` - Full platform access
 - `Admin` - Content moderation, user management
 - `Editor` - Can suggest edits to content
@@ -106,6 +114,7 @@ builder.Services
 - `Restricted` - Limited access (temp banned)
 
 **Implementation:**
+
 ```csharp
 // Endpoint protection example
 [Authorize(Roles = "Admin")]
@@ -121,6 +130,7 @@ if (review.KullaniciId != userId && !isAdmin)
 ```
 
 **Findings:**
+
 - ✅ Role checks on sensitive endpoints
 - ✅ Resource-level checks (own data verification)
 - ✅ No privilege escalation vulnerabilities detected
@@ -138,12 +148,14 @@ if (review.KullaniciId != userId && !isAdmin)
 **Sensitive Data:** Not stored in code. All in environment variables.
 
 **Frontend Environment Variables:**
+
 ```bash
 VITE_NEON_AUTH_URL  → Authentication service URL
 VITE_API_URL        → Backend API URL
 ```
 
 **Backend Environment Variables (20+ required):**
+
 ```
 DATABASE_CONNECTION_STRING
 JWT_SECRET
@@ -156,6 +168,7 @@ CORS_ALLOWED_ORIGINS
 ```
 
 **Files Properly Ignored:**
+
 ```
 .gitignore:
   .env
@@ -166,6 +179,7 @@ CORS_ALLOWED_ORIGINS
 ```
 
 **Verification:**
+
 ```bash
 # Check that no .env files are in git history
 git log --all --full-history --diff-filter=D -- ".env"
@@ -177,9 +191,10 @@ grep -r "api_key" . --include="*.cs" --include="*.tsx" --include="*.ts"
 ```
 
 **Findings:**
+
 - ✅ No `.env` files committed to repository
 - ✅ appsettings uses placeholders like `${JWT_SECRET}`
-- ✅ Frontend uses VITE_ prefix (only loaded if exposed)
+- ✅ Frontend uses VITE\_ prefix (only loaded if exposed)
 - ✅ No API keys found in code comments
 - ✅ Database credentials never logged
 
@@ -190,6 +205,7 @@ grep -r "api_key" . --include="*.cs" --include="*.tsx" --include="*.ts"
 **Status:** OFFLOADED TO PROVIDER
 
 **Neon (Managed PostgreSQL):**
+
 - Encryption at rest: ✅ Default enabled
 - Encryption in transit: ✅ SSL/TLS mandatory
 - Backups: ✅ Automated daily
@@ -197,6 +213,7 @@ grep -r "api_key" . --include="*.cs" --include="*.tsx" --include="*.ts"
 - Connection pooling: ✅ Via pgBouncer
 
 **EF Core Configuration:**
+
 ```csharp
 // saga-backend/Data/SagaDbContext.cs
 optionsBuilder.UseNpgsql(
@@ -206,6 +223,7 @@ optionsBuilder.UseNpgsql(
 ```
 
 **Findings:**
+
 - ✅ Connection string uses `postgresql://` (not `postgres://`)
 - ✅ No data stored in application memory cache
 - ✅ Query results not logged to files
@@ -218,30 +236,30 @@ optionsBuilder.UseNpgsql(
 **Status:** SECURE
 
 **Implementation:**
+
 ```typescript
 // saga-frontend/src/services/neonAuth.ts
-export async function requestPasswordReset(
-  email: string
-): Promise<void> {
+export async function requestPasswordReset(email: string): Promise<void> {
   try {
     const redirectUrl = `${window.location.origin}/sifre-yenile`;
-    
+
     const response = await authClient.requestPasswordReset({
       email,
       redirectTo: redirectUrl,
     });
-    
+
     if (!response) {
       throw new Error("Failed to request password reset");
     }
   } catch (error) {
     console.error("Password reset error:", error);
-    throw error;  // ✅ Errors now thrown, not swallowed
+    throw error; // ✅ Errors now thrown, not swallowed
   }
 }
 ```
 
 **Flow:**
+
 ```
 1. User clicks "Forgot Password"
 2. Enters email → requestPasswordReset(email)
@@ -254,6 +272,7 @@ export async function requestPasswordReset(
 ```
 
 **Findings:**
+
 - ✅ No password sent via email (only reset link)
 - ✅ Reset links expire after 1 hour (Neon Auth default)
 - ✅ Errors properly logged for debugging
@@ -271,6 +290,7 @@ export async function requestPasswordReset(
 **Status:** ENVIRONMENT-AWARE
 
 **Development (localhost):**
+
 ```csharp
 policy.WithOrigins(
     "http://localhost:5173",      // Vite dev server
@@ -285,6 +305,7 @@ policy.WithOrigins(
 ```
 
 **Production (via environment variable):**
+
 ```csharp
 var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"]
     ?? "https://saga-hazel.vercel.app,https://sagaa-two.vercel.app";
@@ -297,6 +318,7 @@ policy.WithOrigins(allowedOrigins.Split(',').Select(o => o.Trim()).ToArray())
 ```
 
 **Findings:**
+
 - ✅ Origin whitelist enforced
 - ✅ Credentials allowed only for listed origins
 - ✅ No wildcard `*` in production
@@ -310,6 +332,7 @@ policy.WithOrigins(allowedOrigins.Split(',').Select(o => o.Trim()).ToArray())
 **Status:** LAYERED VALIDATION
 
 **Frontend Validation:**
+
 ```typescript
 // Basic type checking + UI validation
 const [email, setEmail] = useState("");
@@ -320,6 +343,7 @@ if (!email.includes("@")) {
 ```
 
 **Backend Validation 1 - Data Annotations:**
+
 ```csharp
 public class IcerikCreateDto
 {
@@ -337,6 +361,7 @@ public class IcerikCreateDto
 ```
 
 **Backend Validation 2 - Business Logic:**
+
 ```csharp
 [HttpPost]
 public async Task<IActionResult> CreateReview([FromBody] YorumCreateDto dto)
@@ -357,12 +382,14 @@ public async Task<IActionResult> CreateReview([FromBody] YorumCreateDto dto)
 ```
 
 **Attack Prevention:**
+
 - ✅ SQL Injection: Protected by EF Core parameterized queries
 - ✅ XSS: Frontend escapes HTML, backend uses `[Sanitize]` attributes
 - ✅ Type coercion: Strong typing in C# and TypeScript
 - ✅ Business rule violations: Backend validates state
 
 **Findings:**
+
 - ✅ No raw SQL queries (all use LINQ/EF)
 - ✅ Request body size limited to 10 MB
 - ✅ File uploads validated (size, format)
@@ -375,6 +402,7 @@ public async Task<IActionResult> CreateReview([FromBody] YorumCreateDto dto)
 **Status:** IMPLEMENTED
 
 **Configuration:**
+
 ```csharp
 // saga-backend/Program.cs
 var rateLimitPolicy = "sliding";
@@ -394,17 +422,19 @@ app.UseRateLimiter();
 ```
 
 **Limits:**
+
 - 100 requests per minute per IP address
 - Sliding window (8 segments of 7.5 seconds each)
 - Queue up to 2 requests during limit window
 
 **Findings:**
+
 - ✅ Prevents brute force attacks
 - ✅ Prevents DDoS from single source
 - ✅ Applied globally to all endpoints
 - ⚠️ Consider endpoint-specific limits:
   - Auth attempts: 5/15min
-  - Password reset: 3/hour  
+  - Password reset: 3/hour
   - Uploads: 10/hour
 
 **Status:** GOOD, COULD BE HARDENED ⚠️
@@ -414,6 +444,7 @@ app.UseRateLimiter();
 **Status:** INFORMATION DISCLOSURE MINIMIZED
 
 **Backend Error Response:**
+
 ```csharp
 // Generic error for security
 try {
@@ -425,23 +456,26 @@ try {
 ```
 
 **NOT returned to client:**
+
 - ❌ Stack traces (logged, not sent)
 - ❌ Database error details
 - ❌ File system paths
 - ❌ Internal API endpoints
 
 **Frontend Error Handling:**
+
 ```typescript
 // Logs error internally, shows generic message
 try {
-  const res = await api.post('/...');
+  const res = await api.post("/...");
 } catch (error) {
-  console.error(error);  // Logged for debugging
+  console.error(error); // Logged for debugging
   toast.error("Something went wrong. Please try again.");
 }
 ```
 
 **Findings:**
+
 - ✅ Errors logged for debugging (server-side only)
 - ✅ Generic messages shown to users
 - ✅ No sensitive data in error responses
@@ -456,6 +490,7 @@ try {
 ### ✅ Dependency Security
 
 **Frontend Dependencies:**
+
 ```json
 "react": "^19.2.0",
 "typescript": "~5.9.3",
@@ -463,24 +498,28 @@ try {
 ```
 
 **Audit Results:**
+
 ```bash
 npm audit fix
 # Output: No critical vulnerabilities found (as of Feb 2025)
 ```
 
 **Recommendations:**
+
 1. Run `npm audit` regularly (weekly)
 2. Use `npm audit fix` to patch vulnerabilities
 3. Update major versions cautiously
 4. Test extensively after updates
 
 **Backend Dependencies:**
+
 ```xml
 <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
 ```
 
 **Findings:**
+
 - ✅ Using latest major versions (8.0)
 - ✅ No known CVEs in current dependencies
 - ⚠️ Update Npgsql to 8.0.12+ for latest patches
@@ -490,18 +529,21 @@ npm audit fix
 ### ✅ Type Safety
 
 **Frontend:**
+
 - ✅ TypeScript strict mode enabled (`"strict": true`)
 - ✅ All function parameters typed
 - ✅ React components properly typed
 - ✅ No `any` types (policy)
 
 **Backend:**
+
 - ✅ Nullable reference types enabled (`<Nullable>enable</Nullable>`)
 - ✅ All methods have return types
 - ✅ DTOs validate data contracts
 - ✅ No dynamic types without reason
 
 **Findings:**
+
 ```bash
 # Check TypeScript compilation
 npx tsc --noEmit
@@ -517,6 +559,7 @@ dotnet build
 ### ✅ Logging & Monitoring
 
 **Backend Logging:**
+
 ```csharp
 logger.LogInformation("User {UserId} logged in", userId);
 logger.LogError(ex, "Database error occurred");
@@ -524,23 +567,27 @@ logger.LogWarning("Rate limit exceeded for IP {Ip}", ipAddress);
 ```
 
 **What is logged:**
+
 - ✅ Authentication events (login, logout, token refresh)
 - ✅ API errors (with context, not stack trace)
 - ✅ Security events (failed auth, rate limit)
 - ✅ Database operations (in development only)
 
 **What is NOT logged:**
+
 - ❌ User passwords
 - ❌ API keys or secrets
 - ❌ Full request bodies (especially files)
 - ❌ User data (email, phone, etc.)
 
 **Log Rotation:**
+
 - Deployed to Render
 - Logs available via Render Dashboard
 - Retention: Last 24 hours (Render free tier)
 
 **Findings:**
+
 - ✅ Sensitive data never logged
 - ✅ Errors include context without exposure
 - ✅ Structured logging (ILogger)
@@ -555,6 +602,7 @@ logger.LogWarning("Rate limit exceeded for IP {Ip}", ipAddress);
 **Location:** `saga-backend/Migrations/`
 
 **Migration Process:**
+
 ```bash
 # Create migration (after model changes)
 dotnet ef migrations add MigrationName
@@ -570,10 +618,12 @@ dotnet ef database update PreviousMigration
 ```
 
 **Current Migrations:**
+
 - ✅ `20251125194947_AddYorumReplies` - Latest migration
 - ✅ All applied to production database
 
 **Findings:**
+
 - ✅ Migrations tracked in version control
 - ✅ Designer file auto-generated (don't edit)
 - ✅ Rollback capability preserved
@@ -586,6 +636,7 @@ dotnet ef database update PreviousMigration
 **Status:** PROPER SECRET PROTECTION
 
 **.gitignore protects:**
+
 ```
 .env
 *.env
@@ -598,6 +649,7 @@ node_modules/
 ```
 
 **Verification:**
+
 ```bash
 # Check no secrets in git history
 git log --all -p | grep -i "password\|secret\|key" | head -10
@@ -609,6 +661,7 @@ git du -sk | sort -rn | head -10
 ```
 
 **Findings:**
+
 - ✅ `.gitignore` properly configured
 - ✅ No environment files in history
 - ✅ Clean commit history
@@ -625,27 +678,30 @@ git du -sk | sort -rn | head -10
 **Configuration:** `saga-frontend/vercel.json`
 
 **Security Settings:**
+
 - ✅ HTTPS enforced (automatic)
 - ✅ Headers for security:
   ```json
   {
-    "headers": [{
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
-    }]
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "SAMEORIGIN"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          }
+        ]
+      }
+    ]
   }
   ```
 - ✅ Environment variables in Vercel Dashboard (not in code)
@@ -653,6 +709,7 @@ git du -sk | sort -rn | head -10
 - ✅ Preview deploys from PR branches
 
 **Findings:**
+
 - ✅ No secrets in `vercel.json`
 - ✅ Environment file example provided (`.env.example`)
 - ✅ HTTPS-only (Vercel default)
@@ -664,6 +721,7 @@ git du -sk | sort -rn | head -10
 **Configuration:** `saga-backend/Dockerfile`
 
 **Docker Image:**
+
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
@@ -673,6 +731,7 @@ ENTRYPOINT ["dotnet", "Saga.Server.dll"]
 ```
 
 **Render Settings:**
+
 - ✅ Auto-deploy on push to `main`
 - ✅ Environment variables via Render Dashboard
 - ✅ Health check endpoint: `/api/health`
@@ -680,6 +739,7 @@ ENTRYPOINT ["dotnet", "Saga.Server.dll"]
 - ✅ Logs available via dashboard
 
 **Findings:**
+
 - ✅ Dockerfile doesn't contain secrets
 - ✅ .NET runtime (aspnet, not sdk) in production
 - ✅ Non-root user for container (best practice)
@@ -692,6 +752,7 @@ ENTRYPOINT ["dotnet", "Saga.Server.dll"]
 **Configuration:** Environment variable only
 
 **Security Features:**
+
 - ✅ Automated backups (daily)
 - ✅ Point-in-time restore (14 days)
 - ✅ Encryption at rest (AES-256)
@@ -700,11 +761,13 @@ ENTRYPOINT ["dotnet", "Saga.Server.dll"]
 - ✅ Connection pooling (pgBouncer)
 
 **Connection String Pattern:**
+
 ```
 postgresql://[user]:[password]@[host]:[port]/[database]
 ```
 
 **Findings:**
+
 - ✅ No direct database access from frontend
 - ✅ All connections via API backend
 - ✅ Connection timeout well-configured
@@ -719,21 +782,25 @@ postgresql://[user]:[password]@[host]:[port]/[database]
 ### ✅ Google OAuth
 
 **Flow:**
+
 ```
 Frontend → Google Console → Google OAuth → Neon Auth → Backend
 ```
 
 **Security:**
+
 - ✅ Client ID in environment variable
 - ✅ Redirect URI whitelist maintained
 - ✅ PKCE enabled (authorization code + challenge)
 - ✅ State parameter prevents CSRF
 
 **Console Verification:**
+
 - Add trusted domains in Google Cloud Console
 - Set OAuth redirect URLs: `https://your-auth-domain/auth/callback`
 
 **Findings:**
+
 - ✅ No client secret in frontend (security boundary)
 - ✅ Token exchange happens server-side (Neon Auth)
 - ✅ Proper HTTPS enforcement
@@ -745,11 +812,13 @@ Frontend → Google Console → Google OAuth → Neon Auth → Backend
 **Usage:** Fetch movie/TV data
 
 **Security:**
+
 - API key stored in environment variable
 - Read-only operations (no data modification)
 - Rate limit respected (40 requests/10sec)
 
 **Findings:**
+
 - ✅ No API key exposed in frontend
 - ✅ Requests made from backend only
 - ✅ Cache headers might reduce API calls
@@ -761,11 +830,13 @@ Frontend → Google Console → Google OAuth → Neon Auth → Backend
 **Usage:** Fetch book metadata
 
 **Security:**
+
 - API key stored in environment variable
 - Multiple keys configured for rotation
 - Read-only operations
 
 **Findings:**
+
 - ✅ Keys protected in environment
 - ✅ Requests backend-only
 - ✅ Error handling prevents API credential exposure
@@ -777,11 +848,13 @@ Frontend → Google Console → Google OAuth → Neon Auth → Backend
 **Usage:** AI-powered features
 
 **Security:**
+
 - API key in environment variable
 - Used for semantic search and content analysis
 - Rate-limited by Groq (free tier)
 
 **Findings:**
+
 - ✅ Key protected
 - ✅ No user input directly sent to Groq
 - ✅ Results sanitized before display
@@ -795,6 +868,7 @@ Frontend → Google Console → Google OAuth → Neon Auth → Backend
 ### ✅ Local Storage Usage
 
 **What's stored:**
+
 ```typescript
 // ✅ Acceptable
 localStorage.setItem('theme', 'dark');
@@ -805,11 +879,13 @@ localStorage.setItem('userPreferences', JSON.stringify({...}));
 ```
 
 **Protection:**
+
 - ✅ No API keys in localStorage
 - ✅ Tokens in memory (cleared on refresh)
 - ✅ XSS risk minimized (React escapes by default)
 
 **Findings:**
+
 - ✅ Only non-sensitive data stored
 - ✅ No localStorage-based authentication
 
@@ -818,8 +894,9 @@ localStorage.setItem('userPreferences', JSON.stringify({...}));
 ### ✅ Content Security Policy (CSP)
 
 **Recommended Headers:**
+
 ```
-Content-Security-Policy: 
+Content-Security-Policy:
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com;
   style-src 'self' 'unsafe-inline';
@@ -829,10 +906,12 @@ Content-Security-Policy:
 ```
 
 **Current Status:**
+
 - Managed by Vercel (default headers applied)
 - No custom CSP currently enforced
 
 **Recommendation:**
+
 - ⚠️ Consider adding stricter CSP in `vercel.json`
 
 **Status:** COULD BE ENHANCED ⚠️
@@ -847,6 +926,7 @@ Content-Security-Policy:
 - ✅ Neon connections: SSL/TLS required
 
 **Findings:**
+
 - ✅ No HTTP fallback
 - ✅ HSTS preload ready (if implemented)
 
@@ -859,12 +939,14 @@ Content-Security-Policy:
 ### ✅ Data Privacy
 
 **GDPR Compliance:**
+
 - ✅ User data exportable endpoint
 - ✅ Account deletion cascades to authored content
 - ✅ Privacy settings per content
 - ✅ Block/report system
 
 **Findings:**
+
 - Need to document data retention policy
 - Should add explicit privacy policy page
 
@@ -873,16 +955,19 @@ Content-Security-Policy:
 ### ✅ Code Standards
 
 **TypeScript/JavaScript:**
+
 - ESLint configured
 - Prettier formatting available
 - TypeScript strict mode enabled
 
 **C#:**
+
 - EditorConfig (.editorconfig) recommended
 - StyleCop analyzer can be added
 - Code reviews on PRs
 
 **Findings:**
+
 - ✅ No major code style issues
 - ✅ Consistent naming conventions
 - ⚠️ Could add lint pre-commit hooks
@@ -898,11 +983,13 @@ Content-Security-Policy:
 **Status:** Limited
 
 **Current State:**
+
 - Controllers: Manual testing via API
 - Services: Integration tests via live database
 - Frontend: UI testing manual
 
 **Recommendation:**
+
 ```bash
 # Add xUnit for .NET
 dotnet add package xunit
@@ -913,6 +1000,7 @@ dotnet new xunit -n Saga.Server.Tests
 ```
 
 **Test Coverage Targets:**
+
 - Auth service: >90%
 - Business logic: >80%
 - Controllers: >70% (happy path)
@@ -922,10 +1010,12 @@ dotnet new xunit -n Saga.Server.Tests
 ### ✅ Integration Tests
 
 **Current:**
+
 - Database is live (Neon test branch recommended)
 - API tested via Postman collection (recommended)
 
 **Recommendation:**
+
 ```bash
 # Create test database on Neon
 # Export Postman collection
@@ -937,12 +1027,14 @@ dotnet new xunit -n Saga.Server.Tests
 ### ✅ Security Testing
 
 **Performed:**
+
 - ✅ Manual code review
 - ✅ Dependency audit (npm audit)
 - ✅ Secret scanning (git history)
 - ✅ Static analysis (TypeScript strict, C# nullable)
 
 **Recommended:**
+
 - OWASP dependency checker
 - SQL injection testing
 - CSRF token validation
@@ -969,14 +1061,14 @@ dotnet new xunit -n Saga.Server.Tests
 
 ### ⚠️ Areas for Enhancement
 
-| Priority | Issue | Solution | Effort |
-|----------|-------|----------|--------|
-| 🔴 High | Missing rate limits on auth endpoints | Add endpoint-specific limits (5/15min for login) | 2-4 hours |
-| 🟡 Medium | No Content Security Policy | Add CSP header in vercel.json | 1-2 hours |
-| 🟡 Medium | Limited test coverage | Add xUnit tests (target 80% coverage) | 20-40 hours |
-| 🟡 Medium | No pre-commit hooks | Add husky + lint-staged | 1-2 hours |
-| 🟢 Low | GDPR policy documentation | Add privacy policy + retention policy | 2-4 hours |
-| 🟢 Low | Enhanced monitoring | Add Grafana/Datadog (optional) | 4-8 hours |
+| Priority  | Issue                                 | Solution                                         | Effort      |
+| --------- | ------------------------------------- | ------------------------------------------------ | ----------- |
+| 🔴 High   | Missing rate limits on auth endpoints | Add endpoint-specific limits (5/15min for login) | 2-4 hours   |
+| 🟡 Medium | No Content Security Policy            | Add CSP header in vercel.json                    | 1-2 hours   |
+| 🟡 Medium | Limited test coverage                 | Add xUnit tests (target 80% coverage)            | 20-40 hours |
+| 🟡 Medium | No pre-commit hooks                   | Add husky + lint-staged                          | 1-2 hours   |
+| 🟢 Low    | GDPR policy documentation             | Add privacy policy + retention policy            | 2-4 hours   |
+| 🟢 Low    | Enhanced monitoring                   | Add Grafana/Datadog (optional)                   | 4-8 hours   |
 
 ### ✅ Recommendations for Open Source Release
 
@@ -1026,11 +1118,13 @@ The codebase demonstrates strong security practices with proper credential manag
 ## Appendix B: Security Contacts
 
 **Report Security Vulnerabilities:**
+
 - Email: security@saga.app
 - Discord: [SAGA Security Channel](https://discord.gg/saga)
 - GitHub Security Advisory: [Report Here](https://github.com/saga/security/advisories)
 
 **Do NOT:**
+
 - Open public issues for vulnerabilities
 - Post exploits or detailed demos
 - Share vulnerability details before patch
