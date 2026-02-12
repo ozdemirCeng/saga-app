@@ -12,6 +12,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
@@ -46,8 +47,9 @@ SAGA is an all-in-one social platform designed for entertainment enthusiasts. Wh
 - **Rate & Engage** with interactive community features
 
 The platform is built using modern web technologies with a production-ready architecture supporting:
+
 - 🔐 OAuth authentication via Google
-- 📦 PostgreSQL database with EF Core migrations  
+- 📦 PostgreSQL database with EF Core migrations
 - ⚡ Real-time notifications
 - 🎨 Responsive, dark-themed UI
 - 📱 Native Android app via Capacitor
@@ -55,21 +57,44 @@ The platform is built using modern web technologies with a production-ready arch
 
 ---
 
+## Screenshots
+
+|              Login              |             Feed              |
+| :-----------------------------: | :---------------------------: |
+| ![Login](screenshots/login.png) | ![Feed](screenshots/feed.png) |
+
+|          Discover & Filters           |          Content Detail           |
+| :-----------------------------------: | :-------------------------------: |
+| ![Discover](screenshots/discover.png) | ![Detail](screenshots/detail.png) |
+
+|               Library               |               Profile               |
+| :---------------------------------: | :---------------------------------: |
+| ![Library](screenshots/library.png) | ![Profile](screenshots/profile.png) |
+
+|               Other User Profile                |               Settings                |
+| :---------------------------------------------: | :-----------------------------------: |
+| ![Other Profile](screenshots/profile-other.png) | ![Settings](screenshots/settings.png) |
+
+---
+
 ## Features
 
 ### Core Content Management
+
 - **📖 Library Management**: Track books, movies, games, and anime across multiple lists
 - **⭐ Rating System**: Rate content on a 1-5 star scale with detailed reviews
 - **💬 Community Engagement**: Comment on reviews, reply to comments, like content
 - **📝 Content Curation**: Create and manage multiple lists (reading lists, favorites, wish lists, etc.)
 
 ### Smart Discovery
+
 - **🤖 AI-Powered Search**: Semantic search across titles, descriptions, and user reviews
 - **🔗 External Data Integration**: Pull data from The Movie Database (TMDB), Google Books API, Open Library
 - **📊 Trending Content**: See what the community is discussing
 - **🎯 Personalized Recommendations**: Based on your library and activity
 
 ### Social Features
+
 - **👥 User Profiles**: Customizable profiles with activity history
 - **🔗 Follow System**: Keep track of users you want to follow
 - **🚫 Block/Report**: Moderation tools for a safe community
@@ -77,12 +102,14 @@ The platform is built using modern web technologies with a production-ready arch
 - **💌 Messaging**: Direct message other users (future enhancement)
 
 ### Authentication & Security
+
 - **🔐 OAuth 2.0 with Google**: Secure, passwordless authentication
 - **🛡️ JWT Tokens**: Session management with automatic refresh
 - **🔑 Password Reset**: Secure email-based password recovery
 - **🚫 CORS & Rate Limiting**: API protection against abuse
 
 ### Mobile Experience
+
 - **📱 Native Android App**: Built with Capacitor for native-feel experience
 - **🎨 Responsive Design**: Works seamlessly on all screen sizes
 - **💾 Offline Capable**: Basic functionality works offline with sync on reconnect
@@ -93,6 +120,7 @@ The platform is built using modern web technologies with a production-ready arch
 ## Tech Stack
 
 ### Frontend
+
 - **React 19** - UI framework
 - **Vite 7.2.4** - Build tool (HMR, optimized bundles)
 - **TypeScript** - Type-safe JavaScript
@@ -105,6 +133,7 @@ The platform is built using modern web technologies with a production-ready arch
 - **Motion/Framer** - Smooth animations
 
 ### Backend
+
 - **ASP.NET Core 8.0** - Web framework
 - **Entity Framework Core 8.0** - ORM
 - **PostgreSQL** - Primary database
@@ -114,6 +143,7 @@ The platform is built using modern web technologies with a production-ready arch
 - **Health Checks** - Monitoring endpoints
 
 ### External APIs
+
 - **TMDB API** - Movies & TV shows data
 - **Google Books API** - Book information
 - **Open Library API** - Additional book data
@@ -121,6 +151,7 @@ The platform is built using modern web technologies with a production-ready arch
 - **Local AI (Ollama)** - On-premise semantic search
 
 ### Deployment & Infrastructure
+
 - **Render** - Backend hosting (Docker containers)
 - **Vercel** - Frontend hosting & CDN
 - **Neon** - PostgreSQL as a Service (with scaling)
@@ -178,6 +209,7 @@ The platform is built using modern web technologies with a production-ready arch
 ```
 
 ### API Standards
+
 - **REST** architecture with clear resource hierarchy
 - **JSON** request/response format
 - **JWT** Bearer tokens in Authorization header
@@ -192,6 +224,7 @@ The platform is built using modern web technologies with a production-ready arch
 ### Prerequisites
 
 **System Requirements:**
+
 - Node.js 18.x+ (for frontend)
 - .NET SDK 8.0+ (for backend)
 - PostgreSQL 14+ or Neon account (database)
@@ -199,6 +232,7 @@ The platform is built using modern web technologies with a production-ready arch
 - Git
 
 **Required Accounts:**
+
 - Google Cloud Console (for OAuth)
 - Neon account (for database)
 - TMDB API key (for movie data)
@@ -231,6 +265,7 @@ dotnet run
 ```
 
 **Environment Variables** (see `.env.example`):
+
 ```env
 # Database
 DATABASE_CONNECTION_STRING=postgresql://user:password@host:5432/sagadb
@@ -285,6 +320,7 @@ npm run dev
 ```
 
 **Frontend Environment** (`.env.local`):
+
 ```env
 # API Endpoint (backend)
 VITE_API_URL=http://localhost:5054/api
@@ -315,20 +351,21 @@ npx cap open android
 ```
 
 **Android Configuration** (`capacitor.config.ts`):
+
 ```typescript
 const config: CapacitorConfig = {
-  appId: 'com.saga.app',
-  appName: 'Saga',
-  webDir: 'dist',
+  appId: "com.saga.app",
+  appName: "Saga",
+  webDir: "dist",
   bundledWebRuntime: false,
   server: {
-    androidScheme: 'https',
+    androidScheme: "https",
     allowNavigation: [
-      '*.neon.tech',      // Auth domain
-      'accounts.google.com',
-      '*.googleapis.com'
-    ]
-  }
+      "*.neon.tech", // Auth domain
+      "accounts.google.com",
+      "*.googleapis.com",
+    ],
+  },
 };
 ```
 
@@ -341,6 +378,7 @@ const config: CapacitorConfig = {
 The application uses environment-based configuration:
 
 **Development** (.env.local / .env.development.json)
+
 ```
 VITE_API_URL=http://localhost:5054/api
 VITE_NEON_AUTH_URL=http://localhost:3000/auth
@@ -348,12 +386,14 @@ CORS_DEVELOPMENT=true
 ```
 
 **Production** (Vercel Dashboard Environment Variables)
+
 ```
 VITE_API_URL=https://saga-backend-vvau.onrender.com/api
 VITE_NEON_AUTH_URL=https://ep-cold-glade-ag9bn1r6.neonauth.c-2.eu-central-1.aws.neon.tech/neondb/auth
 ```
 
 **Backend Production** (Render Environment Variables)
+
 - All `${VAR_NAME}` placeholders in `appsettings.json` are resolved
 - CORS_ALLOWED_ORIGINS added for each frontend domain
 
@@ -361,11 +401,11 @@ VITE_NEON_AUTH_URL=https://ep-cold-glade-ag9bn1r6.neonauth.c-2.eu-central-1.aws.
 
 ✅ **DO:** Store in environment variables  
 ✅ **DO:** Use `.env` files locally (ignored by git)  
-✅ **DO:** Use platform dashboard for production (Vercel, Render)  
+✅ **DO:** Use platform dashboard for production (Vercel, Render)
 
 ❌ **DON'T:** Commit `.env`, API keys, or secrets to git  
 ❌ **DON'T:** Hardcode configuration in source code  
-❌ **DON'T:** Share credentials in pull requests or issues  
+❌ **DON'T:** Share credentials in pull requests or issues
 
 ---
 
@@ -431,11 +471,13 @@ SELECT * FROM "Yorum" ORDER BY "OlusturmaTarihi" DESC LIMIT 10;
 ### Frontend Deployment (Vercel)
 
 **Option 1: Automatic (Recommended)**
+
 1. Push to GitHub
 2. Vercel auto-deploys on `main` branch
 3. Environment variables in Vercel Dashboard
 
 **Option 2: Manual**
+
 ```bash
 npm run build
 # Uploads dist/ folder to Vercel
@@ -445,11 +487,13 @@ vercel --prod
 ### Backend Deployment (Render)
 
 **Automatic Deployment:**
+
 1. Render connected to GitHub repository
 2. Auto-deploys on push to `main`
 3. Environment variables in Render Dashboard
 
 **Manual Deployment:**
+
 ```bash
 # Push to GitHub (Render polls your repo)
 git add .
@@ -482,6 +526,7 @@ pg_dump postgresql://user:password@host/database > backup.sql
 [Database Schema Diagram - See ARCHITECTURE.md for details]
 
 **20+ Tables:**
+
 - **User Management**: `Kullanici`, `KullaniciAyarlari`, `Takip`, `Engellenen`
 - **Content**: `Icerik`, `Oyuncu`, `Aktivite`, `Liste`, `ListeIcerigi`
 - **Social**: `Yorum`, `AktiviteYorum`, `Bildirim`, `YorumBegeni`
@@ -503,6 +548,7 @@ dotnet ef database update PreviousMigration
 ### Stored Procedures & Triggers
 
 The database includes:
+
 - **Timestamps**: Auto-updated `OlusturmaTarihi` and `GuncellemeTarihi`
 - **Triggers**: Automatic activity logging
 - **Enums**: `api_kaynak`, `icerik_turu`, `kullanici_rol`, etc.
@@ -530,6 +576,7 @@ The database includes:
 ### Key Endpoints
 
 **User Management**
+
 ```
 GET    /api/kullanicilar              # List users (paginated)
 GET    /api/kullanicilar/:id          # Get user profile
@@ -539,6 +586,7 @@ DELETE /api/kullanicilar/:id          # Deactivate account
 ```
 
 **Content (Books, Movies, Games)**
+
 ```
 GET    /api/icerik                    # List content
 GET    /api/icerik/:id                # Get content details
@@ -550,6 +598,7 @@ PUT    /api/icerik/:id                # Update content (admin)
 ```
 
 **Reviews & Comments**
+
 ```
 GET    /api/yorumlar/:icerikId        # Get reviews for content
 POST   /api/yorumlar                  # Create review
@@ -560,6 +609,7 @@ POST   /api/yorumlar/:id/begeni       # Like review
 ```
 
 **Lists & Organization**
+
 ```
 GET    /api/listeler                  # Get user's lists
 POST   /api/listeler                  # Create new list
@@ -570,6 +620,7 @@ DELETE /api/listeler/:id/sil/:icerikId # Remove from list
 ```
 
 **Statistics & Insights**
+
 ```
 GET    /api/istatistikler/yillik-ozet?yil=2025  # Yearly summary
 GET    /api/istatistikler/ozetim                 # User stats
@@ -577,6 +628,7 @@ GET    /api/istatistikler/etkinlik               # Activity timeline
 ```
 
 **Notifications**
+
 ```
 GET    /api/bildirimler                          # Get notifications
 POST   /api/bildirimler/:id/goster               # Mark as read
@@ -584,6 +636,7 @@ DELETE /api/bildirimler/:id                      # Delete notification
 ```
 
 **Search & Discovery**
+
 ```
 GET    /api/arama?q=query             # Full-text search
 GET    /api/arama/anlam?q=query       # AI semantic search
@@ -766,6 +819,7 @@ GET /api/arama/anlam?q=magic+school+adventure
 ```
 
 **How it works:**
+
 1. User's query is converted to vector embedding (via Groq or local Ollama)
 2. Embedding is compared against indexed content embeddings
 3. Results ranked by similarity score
@@ -780,7 +834,7 @@ POST /api/yorumlar (new review)
     - Content creator
     - Other reviewers
     - Followers of reviewer
-    
+
 // Fetch notifications
 GET /api/bildirimler
   → Returns paginated notifications with context
@@ -813,18 +867,21 @@ GET /api/istatistikler/yillik-ozet?yil=2025
 ## Security & Best Practices
 
 ### Authentication
+
 - ✅ OAuth 2.0 via Google (no password storage)
 - ✅ JWT tokens with 24-hour expiration
 - ✅ Token refresh mechanism (transparent to user)
 - ✅ Secure cookie flags (HttpOnly, SameSite)
 
 ### Authorization
+
 - ✅ Role-based access control (RBAC)
 - ✅ Resource-level permissions (own content)
 - ✅ Admin-only endpoints protected
 - ✅ Prevents data leakage across users
 
 ### API Security
+
 - ✅ CORS restricted by environment
 - ✅ Rate limiting (100 reqs/min per IP)
 - ✅ Input validation on all endpoints
@@ -833,6 +890,7 @@ GET /api/istatistikler/yillik-ozet?yil=2025
 - ✅ Request body size limited (10 MB)
 
 ### Database Security
+
 - ✅ All credentials in environment variables
 - ✅ Connection string not in source code
 - ✅ Automatic backups via Neon
@@ -840,6 +898,7 @@ GET /api/istatistikler/yillik-ozet?yil=2025
 - ✅ Row-level security considerations
 
 ### Frontend Security
+
 - ✅ No API keys stored in code
 - ✅ Tokens only in memory (short-lived)
 - ✅ Sensitive data not logged
@@ -847,6 +906,7 @@ GET /api/istatistikler/yillik-ozet?yil=2025
 - ✅ SVG icons sanitized
 
 ### GDPR & Privacy
+
 - ✅ User data exportable
 - ✅ Account deletion cascades to content ownership
 - ✅ Privacy settings per content
@@ -861,12 +921,14 @@ We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 ### Common Tasks
 
 **Report a Bug**
+
 ```bash
 # Create issue with reproduction steps
 # Include: browser, OS, steps to reproduce, actual vs expected
 ```
 
 **Add a Feature**
+
 ```bash
 # 1. Create feature branch
 git checkout -b feature/feature-name
@@ -883,6 +945,7 @@ git push origin feature/feature-name
 ```
 
 **Improve Documentation**
+
 ```bash
 # Edit .md files and submit PR
 # Review for: clarity, accuracy, examples, links
@@ -895,22 +958,26 @@ git push origin feature/feature-name
 ### Frontend Issues
 
 **"White screen after login"**
+
 - Clear localStorage: DevTools → Application → Clear Storage
-- Check browser console for JWT token errors  
+- Check browser console for JWT token errors
 - Verify `VITE_API_URL` in `.env.local`
 - Restart dev server: `npm run dev`
 
 **"API returns 403 or 401"**
+
 - Expired JWT token → Refresh page
 - Missing Authorization header → Check AuthContext
 - Wrong Neon Auth domain → Verify `VITE_NEON_AUTH_URL`
 
 **"OAuth redirect not working"**
+
 - Neon Console → Auth → trusted origins: add your frontend URL
 - Google Cloud Console → OAuth 2.0 credentials: add frontend domain
 - Browser DevTools → Network: check auth callback URL
 
 **"Styled components not loading"**
+
 - Clear Vite cache: `rm -rf node_modules/.vite`
 - Rebuild CSS: `npm run build`
 - Verify Tailwind config includes `src/**/*.{js,jsx,ts,tsx}`
@@ -918,16 +985,19 @@ git push origin feature/feature-name
 ### Backend Issues
 
 **"Database connection timeout"**
+
 - Check `DATABASE_CONNECTION_STRING` in appsettings
 - Verify Neon database is running (check Neon Console)
 - Ping database: `psql connection-string`
 
 **"EF Core migrations failing"**
+
 - Check for syntax errors: `dotnet ef migrations validate`
 - Rollback: `dotnet ef database update PreviousMigration`
 - Recreate: `rm Migrations/*; dotnet ef migrations add InitialCreate`
 
 **"CORS errors from frontend"**
+
 - Check `AllowedOrigins` in Program.cs
 - Verify `origin` matches exactly (including protocol/port)
 - Add `https://localhost` for local https development
@@ -935,11 +1005,13 @@ git push origin feature/feature-name
 ### Deployment Issues
 
 **"Vercel deployment fails"**
+
 - Check build log: Vercel Dashboard → Deployments → Logs
 - Verify `package.json` scripts: `npm run build` must succeed locally
 - Check environment variables in Vercel Dashboard
 
 **"Backend on Render fails to start"**
+
 - Check Render logs: Dashboard → Services → Logs
 - Verify all environment variables are set
 - Check Docker build: `docker build -t saga .`
