@@ -3,7 +3,7 @@
 > A modern, full-stack platform for discovering, sharing, and engaging with books, movies, games, and creative content. Built with React, ASP.NET Core, and PostgreSQL.
 
 [![Deployed on Vercel](https://img.shields.io/badge/Frontend-Vercel-000?style=flat&logo=vercel)](https://saga-hazel.vercel.app)
-[![Backend on Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=flat)](https://saga-backend-vvau.onrender.com)
+[![Backend on Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=flat)](https://saga-backend-0r4u.onrender.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Open Source](https://img.shields.io/badge/Open-Source-brightgreen)](https://github.com)
 
@@ -388,7 +388,7 @@ CORS_DEVELOPMENT=true
 **Production** (Vercel Dashboard Environment Variables)
 
 ```
-VITE_API_URL=https://saga-backend-vvau.onrender.com/api
+VITE_API_URL=https://saga-backend-0r4u.onrender.com/api
 VITE_NEON_AUTH_URL=https://ep-cold-glade-ag9bn1r6.neonauth.c-2.eu-central-1.aws.neon.tech/neondb/auth
 ```
 

@@ -382,7 +382,7 @@ curl -X GET http://localhost:5054/api/health
 
 **Live Deployments**
 - [Frontend (Vercel)](https://saga-hazel.vercel.app)
-- [API Docs (Swagger)](https://saga-backend-vvau.onrender.com/swagger)
+- [API Docs (Swagger)](https://saga-backend-0r4u.onrender.com/swagger)
 - [Neon Console](https://console.neon.tech)
 
 **External Resources**
